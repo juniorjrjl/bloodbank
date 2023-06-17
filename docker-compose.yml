@@ -1,0 +1,42 @@
+version: '3.8'
+
+services:
+  api:
+    build:
+      context: .
+    command: bash start-dev.sh
+    ports:
+      - "8080:8080"
+      - "5005:5005"
+    environment:
+      SPRING_PROFILES_ACTIVE: dev
+      DB_URL: jdbc:mysql://db:3306/blood_bank?createDatabaseIfNotExist=true&serverTimezone=UTC&allowPublicKeyRetrieval=true
+      DB_USER: blood_bank
+      DB_PASSWORD: blood_bank
+      MAVEN_HOME: /box
+    volumes:
+      - .:/bloodbank
+    depends_on:
+      - db
+    networks:
+      - wk-technology-blood-bank-net
+
+  db:
+    image: mysql:8.0.33
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_USER: blood_bank
+      MYSQL_PASSWORD: blood_bank
+      MYSQL_DATABASE: blood_bank
+    ports:
+      - "3306:3306"
+    networks:
+      - wk-technology-blood-bank-net
+
+networks:
+  wk-technology-blood-bank-net:
+    name: wk-technology-blood-bank-net
+    external: true
+
+volumes:
+  db:
