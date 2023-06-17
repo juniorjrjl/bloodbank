@@ -5,6 +5,8 @@
 CREATE TABLE BLOOD_TYPES (
     id bigint not null auto_increment,
     name varchar(3) not null,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     primary key(id)
 )engine=InnoDB default charset=utf8;
 

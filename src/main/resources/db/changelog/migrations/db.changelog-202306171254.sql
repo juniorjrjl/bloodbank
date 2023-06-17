@@ -10,10 +10,12 @@ CREATE TABLE CANDIDATES (
     birthdate date not null,
     sex varchar(6) not null,
     height decimal(3,2) not null,
-    weight decimal(6,3),
+    weight decimal(6,3) not null,
     father varchar(150) not null,
     mother varchar(150) not null,
     blood_type_id bigint not null,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     constraint fk_candidates_blood_types foreign key (blood_type_id) references BLOOD_TYPES(id),
     primary key(id)
 )engine=InnoDB default charset=utf8;

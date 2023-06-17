@@ -10,6 +10,8 @@ CREATE TABLE ADDRESSES (
     cep char(8) not null,
     city_id bigint not null,
     candidate_id bigint not null,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     primary key(id),
     constraint fk_addresses_cities foreign key (city_id) references CITIES(id),
     constraint fk_addresses_candidates foreign key (candidate_id) references CANDIDATES(id)

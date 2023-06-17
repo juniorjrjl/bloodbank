@@ -7,6 +7,8 @@ CREATE TABLE CONTACTS (
     type varchar(150) not null,
     value varchar(150) not null,
     candidate_id bigint not null,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     constraint fk_contacts_candidates foreign key (candidate_id) references CANDIDATES(id),
     primary key(id)
 )engine=InnoDB default charset=utf8;
