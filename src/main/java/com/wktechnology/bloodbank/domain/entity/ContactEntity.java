@@ -2,6 +2,7 @@ package com.wktechnology.bloodbank.domain.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
@@ -14,6 +15,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
+import java.io.Serial;
+import java.io.Serializable;
 import java.time.OffsetDateTime;
 import java.util.Objects;
 
@@ -25,11 +28,14 @@ import static jakarta.persistence.GenerationType.IDENTITY;
 @ToString
 @Entity
 @Table(name = "CONTACTS")
-public class ContactEntity {
+public class ContactEntity implements Serializable {
+
+    @Serial
+    private static final long serialVersionUID = 1L;
 
     @Id
     @GeneratedValue(strategy = IDENTITY)
-    private long id;
+    private Long id;
 
     @Column(nullable = false)
     private String type;
@@ -37,9 +43,9 @@ public class ContactEntity {
     @Column(nullable = false)
     private String value;
 
-    @ManyToOne
-    @JoinColumn(nullable = false)
-    private CandidateEntity candidate;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "candidate_id", nullable = false)
+    private CandidateEntity candidate = new CandidateEntity();
 
     @Column(nullable = false, name = "created_at")
     private OffsetDateTime createdAt;
@@ -62,18 +68,16 @@ public class ContactEntity {
     public boolean equals(final Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        ContactEntity that = (ContactEntity) o;
-        return id == that.id &&
-                Objects.equals(type, that.type) &&
-                Objects.equals(value, that.value) &&
-                Objects.equals(candidate, that.candidate) &&
-                Objects.equals(createdAt, that.createdAt) &&
-                Objects.equals(updatedAt, that.updatedAt);
+        ContactEntity entity = (ContactEntity) o;
+        return Objects.equals(id, entity.id) &&
+                Objects.equals(type, entity.type) &&
+                Objects.equals(value, entity.value) &&
+                Objects.equals(createdAt, entity.createdAt) &&
+                Objects.equals(updatedAt, entity.updatedAt);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, type, value, candidate, createdAt, updatedAt);
+        return Objects.hash(id, type, value, createdAt, updatedAt);
     }
-
 }

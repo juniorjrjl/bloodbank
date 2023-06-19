@@ -12,6 +12,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
+import java.io.Serial;
+import java.io.Serializable;
 import java.time.OffsetDateTime;
 import java.util.Objects;
 
@@ -23,14 +25,17 @@ import static jakarta.persistence.GenerationType.IDENTITY;
 @ToString
 @Entity
 @Table(name = "STATES")
-public class StateEntity {
+public class StateEntity implements Serializable {
+
+    @Serial
+    private static final long serialVersionUID = 1L;
 
     @Id
     @GeneratedValue(strategy = IDENTITY)
-    private long id;
+    private Long id;
 
     @Column(nullable = false)
-    private String name;
+    private String abbreviation;
 
     @Column(nullable = false, name = "created_at")
     private OffsetDateTime createdAt;
@@ -54,15 +59,15 @@ public class StateEntity {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         StateEntity that = (StateEntity) o;
-        return id == that.id &&
-                Objects.equals(name, that.name) &&
+        return Objects.equals(id, that.id) &&
+                Objects.equals(abbreviation, that.abbreviation) &&
                 Objects.equals(createdAt, that.createdAt) &&
                 Objects.equals(updatedAt, that.updatedAt);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, createdAt, updatedAt);
+        return Objects.hash(id, abbreviation, createdAt, updatedAt);
     }
 
 }

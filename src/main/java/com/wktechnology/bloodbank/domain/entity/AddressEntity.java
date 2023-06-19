@@ -2,6 +2,7 @@ package com.wktechnology.bloodbank.domain.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
@@ -14,6 +15,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
+import java.io.Serial;
+import java.io.Serializable;
 import java.time.OffsetDateTime;
 import java.util.Objects;
 
@@ -25,11 +28,14 @@ import static jakarta.persistence.GenerationType.IDENTITY;
 @ToString
 @Entity
 @Table(name = "ADDRESSES")
-public class AddressEntity {
+public class AddressEntity implements Serializable {
+
+    @Serial
+    private static final long serialVersionUID = 1L;
 
     @Id
     @GeneratedValue(strategy = IDENTITY)
-    private long id;
+    private Long id;
 
     @Column(nullable = false)
     private String street;
@@ -45,11 +51,11 @@ public class AddressEntity {
 
     @ManyToOne
     @JoinColumn(nullable = false)
-    private CityEntity city;
+    private CityEntity city = new CityEntity();
 
-    @ManyToOne
-    @JoinColumn(nullable = false)
-    private CandidateEntity candidate;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "candidate_id", nullable = false)
+    private CandidateEntity candidate = new CandidateEntity();
 
     @Column(nullable = false, name = "created_at")
     private OffsetDateTime createdAt;
@@ -73,20 +79,18 @@ public class AddressEntity {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         AddressEntity that = (AddressEntity) o;
-        return id == that.id &&
+        return Objects.equals(id, that.id) &&
                 Objects.equals(street, that.street) &&
                 Objects.equals(number, that.number) &&
                 Objects.equals(district, that.district) &&
                 Objects.equals(cep, that.cep) &&
                 Objects.equals(city, that.city) &&
-                Objects.equals(candidate, that.candidate) &&
                 Objects.equals(createdAt, that.createdAt) &&
                 Objects.equals(updatedAt, that.updatedAt);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, street, number, district, cep, city, candidate, createdAt, updatedAt);
+        return Objects.hash(id, street, number, district, cep, city, createdAt, updatedAt);
     }
-
 }

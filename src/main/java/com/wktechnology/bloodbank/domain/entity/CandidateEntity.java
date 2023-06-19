@@ -16,12 +16,16 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
+import java.io.Serial;
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.OffsetDateTime;
+import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
+import static jakarta.persistence.CascadeType.ALL;
 import static jakarta.persistence.EnumType.STRING;
 import static jakarta.persistence.GenerationType.IDENTITY;
 
@@ -31,11 +35,14 @@ import static jakarta.persistence.GenerationType.IDENTITY;
 @ToString
 @Entity
 @Table(name = "CANDIDATES")
-public class CandidateEntity {
+public class CandidateEntity implements Serializable {
+
+    @Serial
+    private static final long serialVersionUID = 1L;
 
     @Id
     @GeneratedValue(strategy = IDENTITY)
-    private long id;
+    private Long id;
 
     @Column(nullable = false)
     private String name;
@@ -67,15 +74,15 @@ public class CandidateEntity {
 
     @ManyToOne
     @JoinColumn(nullable = false, name = "blood_type_id")
-    private BloodTypeEntity bloodType;
+    private BloodTypeEntity bloodType = new BloodTypeEntity();
 
     @ToString.Exclude
-    @OneToMany(mappedBy = "candidate")
-    private Set<ContactEntity> contacts;
+    @OneToMany(cascade = ALL, orphanRemoval = true, mappedBy = "candidate")
+    private Set<ContactEntity> contacts = new HashSet<>();
 
     @ToString.Exclude
-    @OneToMany(mappedBy = "candidate")
-    private Set<AddressEntity> addressEntitySet;
+    @OneToMany(cascade = ALL, orphanRemoval = true, mappedBy = "candidate")
+    private Set<AddressEntity> addresses = new HashSet<>();
 
     @Column(nullable = false, name = "created_at")
     private OffsetDateTime createdAt;
@@ -99,7 +106,7 @@ public class CandidateEntity {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         CandidateEntity that = (CandidateEntity) o;
-        return id == that.id &&
+        return Objects.equals(id, that.id) &&
                 Objects.equals(name, that.name) &&
                 Objects.equals(rg, that.rg) &&
                 Objects.equals(cpf, that.cpf) &&

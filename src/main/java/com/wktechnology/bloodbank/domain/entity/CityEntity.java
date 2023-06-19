@@ -14,6 +14,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
+import java.io.Serial;
+import java.io.Serializable;
 import java.time.OffsetDateTime;
 import java.util.Objects;
 
@@ -25,11 +27,14 @@ import static jakarta.persistence.GenerationType.IDENTITY;
 @ToString
 @Entity
 @Table(name = "CITIES")
-public class CityEntity {
+public class CityEntity implements Serializable {
+
+    @Serial
+    private static final long serialVersionUID = 1L;
 
     @Id
     @GeneratedValue(strategy = IDENTITY)
-    private long id;
+    private Long id;
 
     @Column(nullable = false)
     private String name;
@@ -37,7 +42,7 @@ public class CityEntity {
     @ToString.Exclude
     @ManyToOne
     @JoinColumn(nullable = false)
-    private StateEntity state;
+    private StateEntity state = new StateEntity();
 
     @Column(nullable = false, name = "created_at")
     private OffsetDateTime createdAt;
@@ -61,7 +66,7 @@ public class CityEntity {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         CityEntity that = (CityEntity) o;
-        return id == that.id &&
+        return Objects.equals(id, that.id) &&
                 Objects.equals(name, that.name) &&
                 Objects.equals(state, that.state) &&
                 Objects.equals(createdAt, that.createdAt) &&

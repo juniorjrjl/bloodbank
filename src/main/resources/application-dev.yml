@@ -15,3 +15,7 @@ spring:
       enabled: Always
   liquibase:
     change-log: classpath:db/changelog/db.changelog-master.yml
+
+server:
+  servlet:
+    context-path: /blood-bank

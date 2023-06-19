@@ -15,7 +15,10 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
+import java.io.Serial;
+import java.io.Serializable;
 import java.time.OffsetDateTime;
+import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
@@ -27,11 +30,14 @@ import static jakarta.persistence.GenerationType.IDENTITY;
 @ToString
 @Entity
 @Table(name = "BLOOD_TYPES")
-public class BloodTypeEntity {
+public class BloodTypeEntity implements Serializable {
+
+    @Serial
+    private static final long serialVersionUID = 1L;
 
     @Id
     @GeneratedValue(strategy = IDENTITY)
-    private long id;
+    private Long id;
 
     @Column(nullable = false)
     private String name;
@@ -41,14 +47,14 @@ public class BloodTypeEntity {
     @JoinTable(name = "BLOOD_COMPATIBILITY",
             joinColumns = @JoinColumn(name = "giver"),
             inverseJoinColumns = @JoinColumn(name = "receiver"))
-    private Set<BloodTypeEntity> givers;
+    private Set<BloodTypeEntity> givers = new HashSet<>();
 
     @ToString.Exclude
     @ManyToMany
     @JoinTable(name = "BLOOD_COMPATIBILITY",
             joinColumns = @JoinColumn(name = "receiver"),
             inverseJoinColumns = @JoinColumn(name = "giver"))
-    private Set<BloodTypeEntity> receivers;
+    private Set<BloodTypeEntity> receivers = new HashSet<>();
 
     @Column(nullable = false, name = "created_at")
     private OffsetDateTime createdAt;
@@ -72,7 +78,8 @@ public class BloodTypeEntity {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         BloodTypeEntity that = (BloodTypeEntity) o;
-        return id == that.id && Objects.equals(name, that.name) &&
+        return Objects.equals(id, that.id) &&
+                Objects.equals(name, that.name) &&
                 Objects.equals(createdAt, that.createdAt) &&
                 Objects.equals(updatedAt, that.updatedAt);
     }

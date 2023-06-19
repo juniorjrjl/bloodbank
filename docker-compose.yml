@@ -13,7 +13,6 @@ services:
       DB_URL: jdbc:mysql://db:3306/blood_bank?createDatabaseIfNotExist=true&serverTimezone=UTC&allowPublicKeyRetrieval=true
       DB_USER: blood_bank
       DB_PASSWORD: blood_bank
-      MAVEN_HOME: /box
     volumes:
       - .:/bloodbank
     depends_on:
