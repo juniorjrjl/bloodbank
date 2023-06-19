@@ -2,6 +2,7 @@ package com.wktechnology.bloodbank.domain.repository.impl;
 
 import com.wktechnology.bloodbank.domain.dto.AgesBloodTypeDTO;
 import com.wktechnology.bloodbank.domain.dto.CandidatePerStateDTO;
+import com.wktechnology.bloodbank.domain.dto.IMCAndAgeDTO;
 import com.wktechnology.bloodbank.domain.dto.IMCAndSexDTO;
 import com.wktechnology.bloodbank.domain.entity.AddressEntity;
 import com.wktechnology.bloodbank.domain.entity.AddressEntity_;
@@ -65,6 +66,19 @@ public class CandidateCriteriaRepositoryImpl implements CandidateCriteriaReposit
         query.select(criteriaBuilder.construct(IMCAndSexDTO.class,
                 root.get(CandidateEntity_.sex), root.get(CandidateEntity_.weight), root.get(CandidateEntity_.height)));
         query.orderBy(criteriaBuilder.asc(root.get(CandidateEntity_.sex)));
+        var typedQuery = entityManager.createQuery(query);
+        return typedQuery.getResultList();
+    }
+
+    @Override
+    public List<IMCAndAgeDTO> imcAndAge() {
+        var criteriaBuilder = entityManager.getCriteriaBuilder();
+        var query = criteriaBuilder.createQuery(IMCAndAgeDTO.class);
+        var root = query.from(CandidateEntity.class);
+
+        query.select(criteriaBuilder.construct(IMCAndAgeDTO.class,
+                root.get(CandidateEntity_.birthdate), root.get(CandidateEntity_.weight), root.get(CandidateEntity_.height)));
+        query.orderBy(criteriaBuilder.desc(root.get(CandidateEntity_.birthdate)));
         var typedQuery = entityManager.createQuery(query);
         return typedQuery.getResultList();
     }

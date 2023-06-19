@@ -1,8 +1,10 @@
 package com.wktechnology.bloodbank.domain.service.query.impl;
 
 import com.wktechnology.bloodbank.domain.dto.AgesBloodTypeDTO;
+import com.wktechnology.bloodbank.domain.dto.AvengeIMCPerAgeDTO;
 import com.wktechnology.bloodbank.domain.dto.BloodTypeAvengeAgeDTO;
 import com.wktechnology.bloodbank.domain.dto.CandidatePerStateDTO;
+import com.wktechnology.bloodbank.domain.dto.IMCAndAgeDTO;
 import com.wktechnology.bloodbank.domain.dto.PercentObesePerSexDTO;
 import com.wktechnology.bloodbank.domain.repository.CandidateCriteriaRepository;
 import com.wktechnology.bloodbank.domain.service.query.CandidateQueryService;
@@ -62,6 +64,29 @@ public class CandidateQueryServiceImpl implements CandidateQueryService {
             imcAndSexes = imcAndSexes.stream().filter(b -> !typesCalculated.contains(b.getSex())).toList();
         }
         return percentObesesPerSex;
+    }
+
+    @Override
+    public List<AvengeIMCPerAgeDTO> avengeIMCPerRangeAge() {
+        var imcAndAge = candidateCriteriaRepository.imcAndAge();
+        List<AvengeIMCPerAgeDTO> avengesIMCPerAges = new ArrayList<>();
+        var maxAge = 10;
+        while (CollectionUtils.isNotEmpty(imcAndAge)){
+            var ageRangeLabel = String.format("%s..%s", maxAge -10, maxAge);
+            var currentCalc = AvengeIMCPerAgeDTO.builder().ageRange(ageRangeLabel).build();
+            int maxAgeFilterStored = maxAge;
+            var stored = imcAndAge.stream().filter(i -> i.getAge() <= maxAgeFilterStored).toList();
+            if (CollectionUtils.isNotEmpty(stored)){
+                var imcAmount = stored.stream().map(IMCAndAgeDTO::getImc).reduce(BigDecimal.ZERO, BigDecimal::add);
+                var avengeIMC = imcAmount.divide(new BigDecimal(stored.size()), 2, HALF_UP);
+                currentCalc = currentCalc.toBuilder().avengeIMC(avengeIMC).build();
+                avengesIMCPerAges.add(currentCalc);
+                int maxAgeFilterMainList = maxAge;
+                imcAndAge = imcAndAge.stream().filter(i -> i.getAge() > maxAgeFilterMainList).toList();
+            }
+            maxAge += 10;
+        }
+        return avengesIMCPerAges;
     }
 
 }

@@ -1,6 +1,7 @@
 package com.wktechnology.bloodbank.api.controller;
 
 import com.wktechnology.bloodbank.api.controller.request.CandidateSaveBatchRequest;
+import com.wktechnology.bloodbank.domain.dto.AvengeIMCPerAgeDTO;
 import com.wktechnology.bloodbank.domain.dto.BloodTypeAvengeAgeDTO;
 import com.wktechnology.bloodbank.domain.dto.CandidatePerStateDTO;
 import com.wktechnology.bloodbank.domain.dto.PercentObesePerSexDTO;
@@ -48,6 +49,11 @@ public class CandidateController {
     @GetMapping("/percent-obeses-per-sex")
     public List<PercentObesePerSexDTO> percentObesesPerSex(){
         return queryService.percentObesesPerSex();
+    }
+
+    @GetMapping("/avenge-imc-per-range-age")
+    public List<AvengeIMCPerAgeDTO> avengeIMCPerRangeAge(){
+        return queryService.avengeIMCPerRangeAge();
     }
 
 }
