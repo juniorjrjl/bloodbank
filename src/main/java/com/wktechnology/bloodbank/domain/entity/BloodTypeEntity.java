@@ -7,6 +7,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.PreUpdate;
 import jakarta.persistence.Table;
@@ -41,6 +42,10 @@ public class BloodTypeEntity implements Serializable {
 
     @Column(nullable = false)
     private String name;
+
+    @OneToMany(mappedBy = "bloodType")
+    @ToString.Exclude
+    private Set<CandidateEntity> candidates;
 
     @ToString.Exclude
     @ManyToMany

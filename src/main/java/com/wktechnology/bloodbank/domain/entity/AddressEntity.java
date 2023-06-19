@@ -55,6 +55,7 @@ public class AddressEntity implements Serializable {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "candidate_id", nullable = false)
+    @ToString.Exclude
     private CandidateEntity candidate = new CandidateEntity();
 
     @Column(nullable = false, name = "created_at")
