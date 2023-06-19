@@ -68,14 +68,12 @@ public class CityEntity implements Serializable {
         CityEntity that = (CityEntity) o;
         return Objects.equals(id, that.id) &&
                 Objects.equals(name, that.name) &&
-                Objects.equals(state, that.state) &&
-                Objects.equals(createdAt, that.createdAt) &&
-                Objects.equals(updatedAt, that.updatedAt);
+                Objects.equals(state, that.state);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, state, createdAt, updatedAt);
+        return Objects.hash(id, name, state);
     }
 
 }

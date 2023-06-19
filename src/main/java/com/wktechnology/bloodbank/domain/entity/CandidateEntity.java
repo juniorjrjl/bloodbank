@@ -116,14 +116,12 @@ public class CandidateEntity implements Serializable {
                 Objects.equals(weight, that.weight) &&
                 Objects.equals(father, that.father) &&
                 Objects.equals(mother, that.mother) &&
-                Objects.equals(bloodType, that.bloodType) &&
-                Objects.equals(createdAt, that.createdAt) &&
-                Objects.equals(updatedAt, that.updatedAt);
+                Objects.equals(bloodType, that.bloodType);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, rg, cpf, birthdate, sex, height, weight, father, mother, bloodType, createdAt, updatedAt);
+        return Objects.hash(id, name, rg, cpf, birthdate, sex, height, weight, father, mother, bloodType);
     }
 
 }

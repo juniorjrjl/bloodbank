@@ -1,6 +1,6 @@
 --liquibase formatted sql
 --changeset junior:202306170057
---comment: addresses table create
+--comment: store bloods types
 
 INSERT INTO BLOOD_TYPES
 (id, name)

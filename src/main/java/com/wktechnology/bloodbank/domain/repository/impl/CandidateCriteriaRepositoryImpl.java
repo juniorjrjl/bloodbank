@@ -1,11 +1,13 @@
 package com.wktechnology.bloodbank.domain.repository.impl;
 
 import com.wktechnology.bloodbank.domain.dto.AgesBloodTypeDTO;
+import com.wktechnology.bloodbank.domain.dto.BloodTypeAmountDTO;
 import com.wktechnology.bloodbank.domain.dto.CandidatePerStateDTO;
 import com.wktechnology.bloodbank.domain.dto.IMCAndAgeDTO;
 import com.wktechnology.bloodbank.domain.dto.IMCAndSexDTO;
 import com.wktechnology.bloodbank.domain.entity.AddressEntity;
 import com.wktechnology.bloodbank.domain.entity.AddressEntity_;
+import com.wktechnology.bloodbank.domain.entity.BloodCompatibilityEntity_;
 import com.wktechnology.bloodbank.domain.entity.BloodTypeEntity;
 import com.wktechnology.bloodbank.domain.entity.BloodTypeEntity_;
 import com.wktechnology.bloodbank.domain.entity.CandidateEntity;
@@ -79,6 +81,25 @@ public class CandidateCriteriaRepositoryImpl implements CandidateCriteriaReposit
         query.select(criteriaBuilder.construct(IMCAndAgeDTO.class,
                 root.get(CandidateEntity_.birthdate), root.get(CandidateEntity_.weight), root.get(CandidateEntity_.height)));
         query.orderBy(criteriaBuilder.desc(root.get(CandidateEntity_.birthdate)));
+        var typedQuery = entityManager.createQuery(query);
+        return typedQuery.getResultList();
+    }
+
+    @Override
+    public List<BloodTypeAmountDTO> findGiverPerBloodType(final Long bloodTypeId) {
+        var criteriaBuilder = entityManager.getCriteriaBuilder();
+        var query = criteriaBuilder.createQuery(BloodTypeAmountDTO.class);
+        var root = query.from(BloodTypeEntity.class);
+
+        query.select(criteriaBuilder.construct(BloodTypeAmountDTO.class,
+                root.get(BloodTypeEntity_.name), criteriaBuilder.count(root.get(BloodTypeEntity_.name))));
+
+        root.join(BloodTypeEntity_.candidates);
+        var bloodCompatibilitiesJoin = root.join(BloodTypeEntity_.givers);
+        var receiversJoin = bloodCompatibilitiesJoin.join(BloodCompatibilityEntity_.receiver);
+
+        query.where(criteriaBuilder.equal(receiversJoin.get(BloodTypeEntity_.id), bloodTypeId));
+        query.groupBy(root.get(BloodTypeEntity_.name));
         var typedQuery = entityManager.createQuery(query);
         return typedQuery.getResultList();
     }

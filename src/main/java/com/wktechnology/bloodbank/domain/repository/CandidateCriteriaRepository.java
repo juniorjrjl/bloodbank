@@ -1,6 +1,7 @@
 package com.wktechnology.bloodbank.domain.repository;
 
 import com.wktechnology.bloodbank.domain.dto.AgesBloodTypeDTO;
+import com.wktechnology.bloodbank.domain.dto.BloodTypeAmountDTO;
 import com.wktechnology.bloodbank.domain.dto.CandidatePerStateDTO;
 import com.wktechnology.bloodbank.domain.dto.IMCAndSexDTO;
 import com.wktechnology.bloodbank.domain.dto.IMCAndAgeDTO;
@@ -16,5 +17,7 @@ public interface CandidateCriteriaRepository {
     List<IMCAndSexDTO> imcAndSex();
 
     List<IMCAndAgeDTO> imcAndAge();
+
+    List<BloodTypeAmountDTO> findGiverPerBloodType(final Long bloodTypeId);
 
 }

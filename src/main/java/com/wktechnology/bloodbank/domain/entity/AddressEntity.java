@@ -85,13 +85,11 @@ public class AddressEntity implements Serializable {
                 Objects.equals(number, that.number) &&
                 Objects.equals(district, that.district) &&
                 Objects.equals(cep, that.cep) &&
-                Objects.equals(city, that.city) &&
-                Objects.equals(createdAt, that.createdAt) &&
-                Objects.equals(updatedAt, that.updatedAt);
+                Objects.equals(city, that.city);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, street, number, district, cep, city, createdAt, updatedAt);
+        return Objects.hash(id, street, number, district, cep, city);
     }
 }

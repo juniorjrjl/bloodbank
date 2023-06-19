@@ -7,6 +7,8 @@ import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @AllArgsConstructor
 @Service
 public class BloodTypeQueryServiceImpl implements BloodTypeQueryService {
@@ -17,6 +19,11 @@ public class BloodTypeQueryServiceImpl implements BloodTypeQueryService {
     public BloodTypeEntity findByName(final String name) {
         return repository.findByName(name)
                 .orElseThrow(() -> new EntityNotFoundException("Tipo sanguíneo não encontrado"));
+    }
+
+    @Override
+    public List<BloodTypeEntity> findAll() {
+        return repository.findAllByOrderByName();
     }
 
 }

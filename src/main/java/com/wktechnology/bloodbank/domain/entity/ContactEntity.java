@@ -72,13 +72,11 @@ public class ContactEntity implements Serializable {
         ContactEntity entity = (ContactEntity) o;
         return Objects.equals(id, entity.id) &&
                 Objects.equals(type, entity.type) &&
-                Objects.equals(value, entity.value) &&
-                Objects.equals(createdAt, entity.createdAt) &&
-                Objects.equals(updatedAt, entity.updatedAt);
+                Objects.equals(value, entity.value);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, type, value, createdAt, updatedAt);
+        return Objects.hash(id, type, value);
     }
 }

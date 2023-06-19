@@ -4,6 +4,7 @@ import com.wktechnology.bloodbank.api.controller.request.CandidateSaveBatchReque
 import com.wktechnology.bloodbank.domain.dto.AvengeIMCPerAgeDTO;
 import com.wktechnology.bloodbank.domain.dto.BloodTypeAvengeAgeDTO;
 import com.wktechnology.bloodbank.domain.dto.CandidatePerStateDTO;
+import com.wktechnology.bloodbank.domain.dto.DonatesPerBloodReceiverDTO;
 import com.wktechnology.bloodbank.domain.dto.PercentObesePerSexDTO;
 import com.wktechnology.bloodbank.domain.mapper.CandidateMapper;
 import com.wktechnology.bloodbank.domain.service.CandidateService;
@@ -54,6 +55,11 @@ public class CandidateController {
     @GetMapping("/avenge-imc-per-range-age")
     public List<AvengeIMCPerAgeDTO> avengeIMCPerRangeAge(){
         return queryService.avengeIMCPerRangeAge();
+    }
+
+    @GetMapping("/possible-donates-per-blood-receiver")
+    public List<DonatesPerBloodReceiverDTO> possibleDonatesPerBloodReceiver(){
+        return queryService.possibleDonatesPerBloodReceiver();
     }
 
 }

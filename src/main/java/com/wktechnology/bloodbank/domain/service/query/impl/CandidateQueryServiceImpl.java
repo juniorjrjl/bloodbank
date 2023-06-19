@@ -4,9 +4,12 @@ import com.wktechnology.bloodbank.domain.dto.AgesBloodTypeDTO;
 import com.wktechnology.bloodbank.domain.dto.AvengeIMCPerAgeDTO;
 import com.wktechnology.bloodbank.domain.dto.BloodTypeAvengeAgeDTO;
 import com.wktechnology.bloodbank.domain.dto.CandidatePerStateDTO;
+import com.wktechnology.bloodbank.domain.dto.DonatesPerBloodReceiverDTO;
 import com.wktechnology.bloodbank.domain.dto.IMCAndAgeDTO;
 import com.wktechnology.bloodbank.domain.dto.PercentObesePerSexDTO;
+import com.wktechnology.bloodbank.domain.entity.BloodTypeEntity;
 import com.wktechnology.bloodbank.domain.repository.CandidateCriteriaRepository;
+import com.wktechnology.bloodbank.domain.service.query.BloodTypeQueryService;
 import com.wktechnology.bloodbank.domain.service.query.CandidateQueryService;
 import lombok.AllArgsConstructor;
 import org.apache.commons.collections4.CollectionUtils;
@@ -22,16 +25,17 @@ import static java.math.RoundingMode.HALF_UP;
 @Service
 public class CandidateQueryServiceImpl implements CandidateQueryService {
 
-    private final CandidateCriteriaRepository candidateCriteriaRepository;
+    private final CandidateCriteriaRepository criteriaRepository;
+    private final BloodTypeQueryService bloodTypeQueryService;
 
     @Override
     public List<CandidatePerStateDTO> amountPerState() {
-        return candidateCriteriaRepository.amountPerState();
+        return criteriaRepository.amountPerState();
     }
 
     @Override
     public List<BloodTypeAvengeAgeDTO> avengeAgePerBloodType() {
-        var birthdateAndBloodTypes = candidateCriteriaRepository.agesAndBloodType();
+        var birthdateAndBloodTypes = criteriaRepository.agesAndBloodType();
         List<BloodTypeAvengeAgeDTO> bloodTypeAvengeAge = new ArrayList<>();
         while (CollectionUtils.isNotEmpty(birthdateAndBloodTypes)){
             var currentBloodType = birthdateAndBloodTypes.get(0).getBloodType();
@@ -50,7 +54,7 @@ public class CandidateQueryServiceImpl implements CandidateQueryService {
 
     @Override
     public List<PercentObesePerSexDTO> percentObesesPerSex() {
-        var imcAndSexes = candidateCriteriaRepository.imcAndSex();
+        var imcAndSexes = criteriaRepository.imcAndSex();
         List<PercentObesePerSexDTO> percentObesesPerSex = new ArrayList<>();
         while (CollectionUtils.isNotEmpty(imcAndSexes)){
             var currentSex = imcAndSexes.get(0).getSex();
@@ -68,7 +72,7 @@ public class CandidateQueryServiceImpl implements CandidateQueryService {
 
     @Override
     public List<AvengeIMCPerAgeDTO> avengeIMCPerRangeAge() {
-        var imcAndAge = candidateCriteriaRepository.imcAndAge();
+        var imcAndAge = criteriaRepository.imcAndAge();
         List<AvengeIMCPerAgeDTO> avengesIMCPerAges = new ArrayList<>();
         var maxAge = 10;
         while (CollectionUtils.isNotEmpty(imcAndAge)){
@@ -87,6 +91,19 @@ public class CandidateQueryServiceImpl implements CandidateQueryService {
             maxAge += 10;
         }
         return avengesIMCPerAges;
+    }
+
+    @Override
+    public List<DonatesPerBloodReceiverDTO> possibleDonatesPerBloodReceiver() {
+        var bloodTypes = bloodTypeQueryService.findAll();
+        List<DonatesPerBloodReceiverDTO> types = new ArrayList<>();
+        for (BloodTypeEntity bloodType : bloodTypes) {
+            var currentType = DonatesPerBloodReceiverDTO.builder().bloodType(bloodType.getName()).build();
+            var givers = criteriaRepository.findGiverPerBloodType(bloodType.getId());
+            currentType = currentType.toBuilder().donates(givers).build();
+            types.add(currentType);
+        }
+        return types;
     }
 
 }

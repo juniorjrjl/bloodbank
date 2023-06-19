@@ -60,14 +60,12 @@ public class StateEntity implements Serializable {
         if (o == null || getClass() != o.getClass()) return false;
         StateEntity that = (StateEntity) o;
         return Objects.equals(id, that.id) &&
-                Objects.equals(abbreviation, that.abbreviation) &&
-                Objects.equals(createdAt, that.createdAt) &&
-                Objects.equals(updatedAt, that.updatedAt);
+                Objects.equals(abbreviation, that.abbreviation);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, abbreviation, createdAt, updatedAt);
+        return Objects.hash(id, abbreviation);
     }
 
 }

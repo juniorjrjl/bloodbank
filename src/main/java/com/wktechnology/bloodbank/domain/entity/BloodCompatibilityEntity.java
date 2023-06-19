@@ -1,10 +1,10 @@
 package com.wktechnology.bloodbank.domain.entity;
 
 import jakarta.persistence.Column;
+import jakarta.persistence.EmbeddedId;
 import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.MapsId;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.PreUpdate;
 import jakarta.persistence.Table;
@@ -13,44 +13,31 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
-import java.io.Serial;
-import java.io.Serializable;
 import java.time.OffsetDateTime;
-import java.util.HashSet;
 import java.util.Objects;
-import java.util.Set;
 
-import static jakarta.persistence.GenerationType.IDENTITY;
+import static jakarta.persistence.FetchType.LAZY;
 
 @Getter
 @Setter
 @NoArgsConstructor
 @ToString
 @Entity
-@Table(name = "BLOOD_TYPES")
-public class BloodTypeEntity implements Serializable {
+@Table(name = "BLOOD_COMPATIBILITY")
+public class BloodCompatibilityEntity {
 
-    @Serial
-    private static final long serialVersionUID = 1L;
+    @EmbeddedId
+    private BloodCompatibilityId id;
 
-    @Id
-    @GeneratedValue(strategy = IDENTITY)
-    private Long id;
-
-    @Column(nullable = false)
-    private String name;
-
-    @OneToMany(mappedBy = "bloodType")
     @ToString.Exclude
-    private Set<CandidateEntity> candidates;
+    @ManyToOne(fetch = LAZY)
+    @MapsId("giverId")
+    private BloodTypeEntity giver;
 
-    @OneToMany(orphanRemoval = true, mappedBy = "giver")
     @ToString.Exclude
-    private Set<BloodCompatibilityEntity> givers = new HashSet<>();
-
-    @OneToMany(orphanRemoval = true, mappedBy = "receiver")
-    @ToString.Exclude
-    private Set<BloodCompatibilityEntity> receivers = new HashSet<>();
+    @ManyToOne(fetch = LAZY)
+    @MapsId("receiverId")
+    private BloodTypeEntity receiver;
 
     @Column(nullable = false, name = "created_at")
     private OffsetDateTime createdAt;
@@ -73,14 +60,12 @@ public class BloodTypeEntity implements Serializable {
     public boolean equals(final Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        BloodTypeEntity that = (BloodTypeEntity) o;
-        return Objects.equals(id, that.id) &&
-                Objects.equals(name, that.name);
+        BloodCompatibilityEntity that = (BloodCompatibilityEntity) o;
+        return Objects.equals(giver, that.giver) && Objects.equals(receiver, that.receiver);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name);
+        return Objects.hash(giver, receiver);
     }
-
 }
